@@ -3,23 +3,21 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackNavigationProp } from '../../routes/types';
 
-
 export default function Initial() {
   const navigation = useNavigation<RootStackNavigationProp>();
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.navigate("signin")}>
-        <Text> Sign In </Text>
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("signup")}>
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate("signup")}>
-        <Text> Sign Up </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => navigation.navigate("main")}>
-        <Text> Main </Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("signin")}>
+          <Text style={styles.buttonText}>Sign In</Text>
+        </TouchableOpacity>
+      </View>
 
       <Text>Initial</Text>
       <StatusBar style="auto" />
@@ -33,5 +31,28 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    marginBottom: 20,
+  },
+  button: {
+    flex: 1,
+    height: 40,
+    marginHorizontal: 10,
+    backgroundColor: 'gray',
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+  },
+  mainButton: {
+    marginTop: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: 'blue',
+    borderRadius: 10,
   },
 });
