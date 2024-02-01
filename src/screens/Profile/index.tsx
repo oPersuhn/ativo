@@ -3,15 +3,20 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackNavigationProp } from '../../routes/types';
 import { AntDesign } from '@expo/vector-icons'; 
+import React, { useState, useEffect } from 'react';
 
 export default function Profile() {
   const navigation = useNavigation<RootStackNavigationProp>();
+  const [imgURL, setImageURL] = useState("")
+  const [progress, setProgess] = useState(0)
+
+  const handleUpload = (event: string) => {} 
 
   return (
     <View style={styles.container}>
       <Text>Profile</Text>
       <StatusBar style="auto" />
-        <View style={styles.container}>
+        
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("new")}>
               <AntDesign name="plus" size={24} color="white" />
@@ -23,8 +28,9 @@ export default function Profile() {
               <Text>Configurações</Text>
             </TouchableOpacity>
           </View>
-        
-        </View>
+          <View style={styles.profilePhotoContainer}>
+          
+          </View>
     </View>
   );
 }
@@ -52,4 +58,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3, // Opacidade da sombra
     shadowRadius: 2, // Raio da sombra
   },
+  profilePhotoContainer : {
+
+  }
 });

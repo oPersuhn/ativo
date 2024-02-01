@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackNavigationProp } from '../../routes/types';
 import { AntDesign } from '@expo/vector-icons';
+import React from 'react'
 
 export default function Study() {
   const navigation = useNavigation<RootStackNavigationProp>();
