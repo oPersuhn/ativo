@@ -3,37 +3,37 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackNavigationProp } from '../../routes/types';
 import React from 'react';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Initial() {
   const navigation = useNavigation<RootStackNavigationProp>();
 
   return (
-    <View style={styles.container}>
-      <View style={styles.buttonContainer}>
-        
+    // AQUI TEMOS O LINEAR GRADIENT, ONDE ELE FAZ O EFEITO DEGRADE NAS PAGINAS 
+    <LinearGradient
+      colors={['#696969', '#F8F8FF']}
+      style={styles.container}
+    >
+      <View style={styles.gradientContainer}>
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("signup")}>
-          <Text style={styles.buttonText}>Sign Up</Text>
+          <Text style={styles.buttonText}>Cadastro</Text>
         </TouchableOpacity>
-
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("signin")}>
-          <Text style={styles.buttonText}>Sign In</Text>
+          <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
       </View>
-
-      <Text>Initial</Text>
       <StatusBar style="auto" />
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  buttonContainer: {
+  gradientContainer: {
     flexDirection: 'row',
     marginBottom: 20,
   },
@@ -41,19 +41,12 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 40,
     marginHorizontal: 10,
-    backgroundColor: 'gray',
+    backgroundColor: '#808080',
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonText: {
-    color: '#fff',
-  },
-  mainButton: {
-    marginTop: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: 'blue',
-    borderRadius: 10,
+    color: '#000000',
   },
 });

@@ -9,6 +9,7 @@ export type RootStackParamList = {
   profile: undefined;
   new: undefined;
   report: undefined;
+  initial: undefined;
 };
 
 export type RootStackNavigationProp = NativeStackNavigationProp<RootStackParamList, keyof RootStackParamList>;

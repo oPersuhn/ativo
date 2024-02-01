@@ -2,7 +2,7 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import SignIn from "../screens/SignIn/";
-import SignUp from "../screens/SignUp/";
+import SignUp from "../screens/SingUp";
 import Config from "../screens/Config/";
 import Initial from "../screens/Initial/";
 import Report from "../screens/Report";
@@ -13,10 +13,16 @@ const Stack = createNativeStackNavigator();
 
 export default function StackRoutes(){
     return(
-        <Stack.Navigator initialRouteName="initial" >
+        <Stack.Navigator initialRouteName="initial"
+        screenOptions={{
+        headerShown: false,
+        }
+        } >
             <Stack.Screen 
             name="initial"
             component={Initial}
+            options={{headerShown: false}
+        }
             />
 
             <Stack.Screen 
@@ -27,6 +33,7 @@ export default function StackRoutes(){
             <Stack.Screen 
             name="signup"
             component={SignUp}
+            options={{ title: "Cadastro"}}
             />
 
             <Stack.Screen 
