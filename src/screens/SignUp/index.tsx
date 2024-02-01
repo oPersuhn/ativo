@@ -4,6 +4,8 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-nativ
 import { useNavigation } from '@react-navigation/native';
 import { RootStackNavigationProp } from '../../routes/types';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { collection, doc, setDoc } from "firebase/firestore";
+import { database } from "../../config/firebaseConfig"
 
 // ... (importações)
 
@@ -15,22 +17,34 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  const newUser = () => {
+  const enviarUserParaDatabase = async () => {
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError("As senhas informadas são diferentes");
       return;
     }
-
+  
     const auth = getAuth();
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log(user);
-        navigation.navigate('main');
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
+  
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log(user);
+      navigation.navigate('main');
+  
+      const userCollection = collection(database, 'users');
+      const userDocRef = doc(userCollection, user.uid);
+  
+      // Adicionando subcoleção 'dados'
+      const dadosCollection = collection(userDocRef, 'dados');
+      
+      // Documento dentro de 'dados'
+      const dadosUser = { uid: user.uid, username: username, email: email };
+      await setDoc(doc(dadosCollection, 'uid'), dadosUser);
+  
+      console.log('Usuário e dados salvos com sucesso no banco de dados!');
+    } catch (error: any) {
+      setError(error.message);
+    }
   };
 
   return (
@@ -63,7 +77,7 @@ export default function SignUp() {
         onChangeText={(text) => setConfirmPassword(text)}
       />
       {error && <Text style={styles.errorText}>{error}</Text>}
-      <TouchableOpacity style={styles.button} onPress={newUser}>
+      <TouchableOpacity style={styles.button} onPress={enviarUserParaDatabase}>
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
       <StatusBar style="auto" />

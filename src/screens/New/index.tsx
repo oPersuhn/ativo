@@ -1,24 +1,33 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, Button } from 'react-native';
 import { collection, doc, setDoc } from "firebase/firestore";
-import { database } from '../../config/firebaseConfig'; // Substitua pelo caminho correto
+import { database } from '../../config/firebaseConfig'; 
+import { getAuth } from "firebase/auth";
 
 export default function New() {
   const [valorGasto, setValorGasto] = useState('');
 
   const enviarParaBancoDeDados = async () => {
     try {
-      const gastosCollection = collection(database, 'gastos'); // Substitua 'gastos' pelo nome da sua coleção
+      const auth = getAuth();
+      const userId = auth.currentUser?.uid; 
+
+      // Referência à coleção 'users' e ao documento específico do usuário
+      const usersCollection = collection(database, 'users');
+      const userDocRef = doc(usersCollection, userId);
+
+      // Referência à subcoleção 'gastos' dentro do documento do usuário
+      const gastosCollection = collection(userDocRef, 'gastos');
 
       const novoGasto = {
-        valor: parseFloat(valorGasto), // Converter para número, se necessário
+        valor: parseFloat(valorGasto),
         timestamp: new Date(),
       };
 
-      await setDoc(doc(gastosCollection), novoGasto); // Define o documento com o novoGasto
-      console.log('Valor enviado com sucesso para o banco de dados!');
+      await setDoc(doc(gastosCollection), novoGasto); // Define o documento com o novoGasto dentro da subcoleção 'gastos'
+      console.log('Valor enviado com sucesso para o banco de dados!', userId);
     } catch (error) {
-      console.error('Erro ao enviar valor para o banco de dados:', error);
+      console.error('Erro ao enviar valor para o banco de dados: ', error);
     }
   };
 
