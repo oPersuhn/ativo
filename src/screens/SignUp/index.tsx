@@ -16,7 +16,7 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-
+  
   const enviarUserParaDatabase = async () => {
     if (password !== confirmPassword) {
       setError("As senhas informadas são diferentes");
@@ -38,7 +38,7 @@ export default function SignUp() {
       const dadosCollection = collection(userDocRef, 'dados');
       
       // Documento dentro de 'dados'
-      const dadosUser = { uid: user.uid, username: username, email: email };
+      const dadosUser = {username: username, email: email };
       await setDoc(doc(dadosCollection, 'uid'), dadosUser);
   
       console.log('Usuário e dados salvos com sucesso no banco de dados!');
@@ -119,3 +119,4 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
+

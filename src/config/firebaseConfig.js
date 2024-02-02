@@ -1,10 +1,11 @@
 // firebaseConfig.js
 // Realizando as importações necessárias
 import { initializeApp } from 'firebase/app'
-import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import { initializeAuth, getReactNativePersistence, getAuth } from 'firebase/auth';
 import { getFirestore } from "firebase/firestore";
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-import { getStorage } from 'firebase/storage'                                     
+import { getStorage } from 'firebase/storage';
+
 
 // Configurando as credenciais vindas do firebase
 const firebaseConfig = {
@@ -21,7 +22,8 @@ const app = initializeApp(firebaseConfig);
 
 // Inicializando o Firebase Auth (para autentificação) com AsyncStorage para persistência de dados
 const auth = initializeAuth(app, {
-    persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+    persistence: getReactNativePersistence(ReactNativeAsyncStorage),
+    auth: getAuth()
   });
 
 // Obtendo o firestore (nosso banco de dados)

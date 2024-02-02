@@ -3,14 +3,26 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackNavigationProp } from '../../routes/types';
 import { AntDesign } from '@expo/vector-icons'; 
-import React from 'react'
+import React from 'react';
 
 export default function Home() {
   const navigation = useNavigation<RootStackNavigationProp>();
 
+  /* 
+  const auth = getAuth()
+  const uid = auth.currentUser.uid
+
+  const collectionUsers = collection(database, 'users')
+  const docUser = getDoc(collectionUser, uid)
+  const dataUser = docUser.data()
+  const username = dataUser.username
+  */
+  const username = ''
+
   return (
     <View style={styles.container}>
       <Text>Home</Text>
+      <Text>Olá, {username}</Text>
       <StatusBar style="auto" />
         <View style={styles.container}>
             <View style={styles.buttonContainer}>
