@@ -23,7 +23,8 @@ export default function SignIn() {
         navigation.navigate("main");
       })
       .catch((error) => {
-        setErrorLogin(error.message);
+        setErrorLogin("Email ou senha incorreto.");
+        console.log(error.message)
       })
       .finally(() => {
         setLoading(false);

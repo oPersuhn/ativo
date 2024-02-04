@@ -4,7 +4,8 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-nativ
 import { useNavigation } from '@react-navigation/native';
 import { RootStackNavigationProp } from '../../routes/types';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-
+import { database } from '../../config/firebaseConfig';
+import { collection, setDoc, doc } from 'firebase/firestore';
 // ... (importações)
 
 export default function SignUp() {
@@ -15,22 +16,28 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  const newUser = () => {
+  const enviarUserParaDatabase = async () => {
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError("As senhas informadas são diferentes");
       return;
     }
 
     const auth = getAuth();
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log(user);
-        navigation.navigate('main');
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
+
+    try{
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+      const userUid = userCredential.user.uid;
+      
+      const userCollection = collection(database, 'users');
+      
+      const dadosUser = {username: username, email: email };
+      await setDoc(doc(userCollection, userUid), dadosUser);
+      console.log('Usuário e dados salvos com sucesso no banco de dados!');
+      navigation.navigate('main');
+    } catch (error: any) {
+      setError(error.message);
+    }
+      
   };
 
   return (
@@ -63,7 +70,7 @@ export default function SignUp() {
         onChangeText={(text) => setConfirmPassword(text)}
       />
       {error && <Text style={styles.errorText}>{error}</Text>}
-      <TouchableOpacity style={styles.button} onPress={newUser}>
+      <TouchableOpacity style={styles.button} onPress={enviarUserParaDatabase}>
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
       <StatusBar style="auto" />
