@@ -5,15 +5,13 @@ import { RootStackNavigationProp } from '../../routes/types';
 import { collection, doc, setDoc, getDoc } from "firebase/firestore";
 import { database } from '../../config/firebaseConfig';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { Radio } from "native-base";
-import { NativeBaseProvider } from 'native-base';
+import RNPickerSelect from 'react-native-picker-select';
 
 export default function New() {
   const navigation = useNavigation<RootStackNavigationProp>();
   const [valorGasto, setValorGasto] = useState('');
+  const [tipoDeGasto, setTipoDeGasto] = useState('');
   const [userUid, setUserUid] = useState<string | null>(null);
-  const [service, setService] = useState('');
-  const [error, setError] = useState('');
 
   useEffect(() => {
     const auth = getAuth();
@@ -33,60 +31,48 @@ export default function New() {
 
   const enviarParaBancoDeDados = async () => {
     try {
-      // Verifica se o valor do gasto e o tipo de gasto foram inseridos
-      if (valorGasto === '' || service === '') {
-        setError('Por favor, preencha todos os campos.');
-        return;
-      }
-
       const gastosCollection = collection(database, 'gastos');
 
       const novoGasto = {
         valor: parseFloat(valorGasto),
-        tipoDeGasto: service,
+        tipoDeGasto: tipoDeGasto,
         timestamp: new Date(),
         uid: userUid, // Adiciona o UID do usuário aos dados do gasto
       };
 
       await setDoc(doc(gastosCollection), novoGasto);
       console.log('Valor enviado com sucesso para o banco de dados!');
-      
-      // Limpa os campos após o envio bem-sucedido
-      setValorGasto('');
-      setService('');
-      setError('');
     } catch (error) {
       console.error('Erro ao enviar valor para o banco de dados:', error);
     }
   };
 
   return (
-    <NativeBaseProvider>
-      <View style={styles.container}>
-        <Text>Valor do gasto</Text>
-        <TextInput
-          style={{ height: 40, borderColor: 'gray', borderWidth: 1, margin: 10, padding: 5 }}
-          keyboardType="numeric"
-          placeholder="Digite o valor"
-          value={valorGasto}
-          onChangeText={(text) => setValorGasto(text)}
-        />
-        <Text>Tipo de gasto</Text>
-        <Radio.Group 
-          name="myRadioGroup" 
-          accessibilityLabel="Escolha o tipo do gasto" 
-          value={service} 
-          onChange={(value) => setService(value)}
-        >
-          <Radio value="Fixo">Fixo</Radio>
-          <Radio value="Transporte">Transporte</Radio>
-          <Radio value="Lazer">Lazer</Radio>
-          <Radio value="Inesperado">Inesperado</Radio>
-        </Radio.Group>
-        <Text style={{ color: 'red' }}>{error}</Text>
-        <Button title="Enviar para o Banco de Dados" onPress={enviarParaBancoDeDados} />
-      </View>
-    </NativeBaseProvider>
+    <View style={styles.container}>
+      <Text>New</Text>
+      <TextInput
+        style={{ height: 40, borderColor: 'gray', borderWidth: 1, margin: 10, padding: 5 }}
+        keyboardType="numeric"
+        placeholder="Digite o valor"
+        value={valorGasto}
+        onChangeText={(text) => setValorGasto(text)}
+      />
+      <RNPickerSelect
+        onValueChange={(value) => setTipoDeGasto(value)}
+        items={[
+          { label: 'Lazer', value: 'lazer'},
+          { label: 'Investimentos', value: 'investimento'},
+          { label: 'Transporte', value: 'transporte'},
+          { label: 'Fixos', value: 'fixos'},
+          { label: 'Inesperados', value: 'inesperados'},
+        ]}
+        style={{
+          inputIOS: { color: 'black' },
+          inputAndroid: { color: 'black' },
+        }}
+      />
+      <Button title="Enviar para o Banco de Dados" onPress={enviarParaBancoDeDados} />
+    </View>
   );
 }
 
@@ -97,5 +83,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     color: 'black'
-  }
+  },
+  itensSelect:{
+    color: 'black'
+  },
 });
